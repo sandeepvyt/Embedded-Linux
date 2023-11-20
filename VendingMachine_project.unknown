@@ -1,0 +1,269 @@
+#!/bin/bash
+
+# Array to store items
+declare -a items
+items=("COKE" "PEPSI" "SPRITE")
+
+# Array to store prices
+declare -a MRP
+MRP=("20" "10" "20")
+
+# Array to store quantities
+declare -a Qty
+Qty=("5" "2" "3")
+
+# Array to store admin changes
+declare -a admin_changes
+
+# Function to add an item
+function add_item() {
+    local name=$(zenity --entry --width 500 --height 300 --title="Add Item" --text="Enter item name:")
+    
+    if [ $? = 1 ]; then
+        return  # Terminate the step if Cancel is clicked
+    fi
+
+    local valid_price=false
+    local valid_qty=false
+    local price
+    local qty
+
+    while [ "$valid_price" != true ] || [ "$valid_qty" != true ]; do
+        price=$(zenity --entry --width 500 --height 300 --title="Add Item" --text="Enter item price:")
+
+        # Check if price is a valid integer
+        if [[ "$price" =~ ^[0-9]+$ ]]; then
+            valid_price=true
+        else
+            zenity --warning --width 500 --height 250 --text="Invalid input. Price must be an integer."
+            break;
+        fi
+
+        # Prompt for quantity
+        qty=$(zenity --entry --width 500 --height 300 --title="Add Item" --text="Enter item quantity:")
+
+        # Check if quantity is a valid integer
+        if [[ "$qty" =~ ^[0-9]+$ ]]; then
+            valid_qty=true
+        else
+            zenity --warning --width 500 --height 250 --text="Invalid input. Quantity must be an integer."
+        fi
+    done
+    
+    if [ -n "$name" ] && [ -n "$price" ] && [ -n "$qty" ]; then
+        items+=("$name")
+        MRP+=("$price")
+        Qty+=("$qty")
+        admin_changes+=("Added item: $name $price $qty")
+        zenity --info --width 500 --height 250 --text="Item added successfully!"
+    else
+        zenity --warning --width 500 --height 250 --text="Invalid input. Item not added."
+    fi
+}
+
+# Function to delete an item
+function delete_item() {
+    local item_list=()
+    for i in "${!items[@]}"; do
+        local item_name=${items[$i]}
+        local item_price=${MRP[$i]}
+        local item_qty=${Qty[$i]}
+        item_list+=("$i" "$item_name" "$item_price" "$item_qty")
+    done
+
+    local item_no=$(zenity --list --width 500 --height 300 --title="Delete Item" --text="Select item to delete" --column="Item No." --column="Item Name" --column="Price" --column="Quantity" "${item_list[@]}")
+    
+    if [ -n "$item_no" ]; then
+        unset 'items[$item_no]'
+        unset 'MRP[$item_no]'
+        unset 'Qty[$item_no]'
+        admin_changes+=("Deleted item: ${items[$item_no]} ${MRP[$item_no]} ${Qty[$item_no]}")
+        zenity --info --width 500 --height 250 --text="Item deleted successfully!"
+    else
+        zenity --warning --width 500 --height 250 --text="No item selected. Deletion cancelled."
+    fi
+}
+
+# Function to update item price and quantity
+function update_price() {
+    local item_list=()
+    for i in "${!items[@]}"; do
+        item_list+=("$i" "${items[$i]}" "${MRP[$i]}" "${Qty[$i]}")
+    done
+
+    local item_no=$(zenity --list --width 500 --height 300 --title="Update Price" --text="Select item to update price and quantity" --column="Item No." --column="Item Details" --column="Price" --column="Quantity" "${item_list[@]}")
+
+    local valid_new_price=false
+    local valid_new_qty=false
+    local new_price
+    local new_qty
+
+    while [ "$valid_new_price" != true ] || [ "$valid_new_qty" != true ]; do
+        new_price=$(zenity --entry --width 500 --height 300 --title="Update Price" --text="Enter new price:")
+        new_qty=$(zenity --entry --width 500 --height 300 --title="Update Price" --text="Enter new quantity:")
+
+        # Check if new_price and new_qty are valid integers
+        if [[ "$new_price" =~ ^[0-9]+$ ]] && [[ "$new_qty" =~ ^[0-9]+$ ]]; then
+            valid_new_price=true
+            valid_new_qty=true
+        else
+            zenity --warning --width 500 --height 250 --text="Invalid input. Price and Quantity must be integers."
+        fi
+    done
+
+    if [ -n "$item_no" ] && [ -n "$new_price" ] && [ -n "$new_qty" ]; then
+        local updated_item=${items[$item_no]}
+        items[$item_no]="${updated_item% *}"
+        MRP[$item_no]=$new_price
+        Qty[$item_no]=$new_qty
+        admin_changes+=("\nUpdated item price and quantity: ${updated_item% *}")
+        zenity --info --width 500 --height 250 --text="Price and quantity updated successfully!"
+    else
+        zenity --warning --width 500 --height 250 --text="Invalid input. Price and quantity not updated."
+    fi
+}
+
+# Function to ask for quantity before proceeding
+function ask_quantity() {
+    local valid_qty=false
+    local quantity
+
+    while [ "$valid_qty" != true ]; do
+        quantity=$(zenity --entry --width 500 --height 300 --title="Quantity" --text="Enter quantity:")
+        
+        # Check if quantity is a valid integer
+        if [[ "$quantity" =~ ^[0-9]+$ ]]; then
+            valid_qty=true
+        else
+            zenity --warning --width 500 --height 250 --text="Invalid input. Quantity must be an integer."
+        fi
+    done
+
+    # Proceed with the selected quantity
+    echo "$quantity"
+}
+
+# To welcome the vending machine
+zenity --info --width 500 --height 250 --text="WELCOME TO VENDING MACHINE"
+
+# Use selection box for admin or customer
+activity1=$(zenity --list --width 500 --height 300 --text "Select the option" --radiolist --column "Select" --column "you are" FALSE "admin" TRUE "customer")
+
+# If it is admin, display the password
+if [ "$activity1" = "admin" ]; then
+    OUTPUT=$(zenity --password --width 500 --height 250 "Password")
+
+    # Check if password is correct
+    if [ "$OUTPUT" = "abc1234" ]; then
+        while true; do
+            # Display admin menu
+            admin_action=$(zenity --list --width 500 --height 400 --text "Admin Menu" --column "Action" "Add Item" "Delete Item" "Update Price" "Exit")
+
+            case $admin_action in
+                "Add Item")
+                    add_item ;;
+                "Delete Item")
+                    delete_item ;;
+                "Update Price")
+                    update_price ;;
+                "Exit")
+                    break;;
+                *)
+                    zenity --warning --width 500 --height 250 --text="Invalid selection" ;;
+            esac
+        done
+    else
+        # Throw an error
+        zenity --error --width 500 --height 250 --text "Password incorrect. Terminating"
+        exit
+    fi
+fi
+
+# Use selection box for admin or customer
+activity1=$(zenity --list --width 500 --height 300 --text "Select the option" --radiolist --column "Select" --column "you are" FALSE "admin" TRUE "customer")
+
+# If customer enters the amount
+valid_entry=false
+while [ "$valid_entry" != true ]; do
+    ENTRY=$(zenity --entry --width 500 --height 300 --title="Amount" --text="Enter your amount:")
+
+    # Check if ENTRY is a valid integer
+    if [[ "$ENTRY" =~ ^[0-9]+$ ]]; then
+        valid_entry=true
+    else
+        zenity --warning --width 500 --height 250 --text="Invalid input. Amount must be an integer."
+    fi
+done
+
+if [ "$ENTRY" -eq 10 ] || [ "$ENTRY" -eq 20 ] || [ "$ENTRY" -eq 30 ] || [ "$ENTRY" -eq 40 ] || [ "$ENTRY" -eq 50 ]; then
+    # Ask for quantity before proceeding
+    selected_quantity=1
+
+    # Display item list with quantity
+    item_list=()
+    for i in "${!items[@]}"; do
+        item_list+=("$i" "${items[$i]}" "${MRP[$i]}" "${Qty[$i]}")
+        REMAINING=$((ENTRY-(MRP[$i]*selected_quantity)))
+        
+    done
+    ITEM=$(zenity --list --width 500 --height 400 --title="Choose the item You Wish to purchase" --text="Select items from the list below" --column="Item No." --column="Item Details" --column="Price" --column="Quantity" "${item_list[@]}")
+    selected_quantity=$(ask_quantity)
+       if [ "$selected_quantity" -gt "${Qty[$ITEM]}" ]; then
+            zenity --warning --width 500 --height 250 --text="Insufficient Quantity. Transaction cancelled." 
+            exit   
+        fi
+    REMAINING=$((ENTRY-(MRP[$i]*selected_quantity)))
+    if [ -n "$ITEM" ]; then
+        # Calculate remaining amount
+        SELECTED_PRICE=$(echo "$ITEM" | awk '{print $3}')
+        #REMAINING=$((ENTRY-(MRP[$i]*selected_quantity)))
+         REMAINING=$((ENTRY - (MRP[$ITEM] * selected_quantity)))
+        # Ask for confirmation
+        zenity --question --width 500 --height 300 --title="Confirmation" --text "Are you sure you want to go for this selection?\nItem: ${items[$ITEM]}\nCost of item: $((MRP[$ITEM]*selected_quantity))\nActual Quantity: ${Qty[$ITEM]}\nQuantity Chosen: $selected_quantity\nYour Amount: $ENTRY\nRemaining: $REMAINING"
+
+        if [ $? = 0 ]; then
+            # Display selected item
+            #zenity --info --width 500 --height 300 --text="You selected the item::\n${items[$ITEM]} (Qty: ${Qty[$ITEM]})"
+     
+            if [ "$ENTRY" -lt "$((MRP[$ITEM]*selected_quantity))" ]; then
+                zenity --warning --width 500 --height 250 --text="Insufficient amount. Transaction cancelled." 
+                exit   a
+            fi
+            zenity --info --width 500 --height 300 --text="Item_No: $ITEM\nAmount: $ENTRY\nRemaining: $REMAINING"
+
+            # Update the quantity of the selected item
+            Qty[$ITEM]=$((Qty[$ITEM]-selected_quantity))
+
+            # Update the ITEM variable and item_list array after the purchase
+            item_list=()
+            for i in "${!items[@]}"; do
+                item_list+=("$i" "${items[$i]}" "${MRP[$i]}" "${Qty[$i]}")
+              
+            done
+        else
+            zenity --info --width 500 --height 250 --text="Transaction cancelled."
+            exit
+        fi
+    else
+        zenity --warning --width 500 --height 250 --text="Item not selected. Transaction cancelled."
+        exit
+    fi
+else
+    # If amount not entered, display warning
+    zenity --warning --width 500 --height 250 --text="Invalid Amount entered!!!.\nEnter amount less than 60 rupees!"
+    exit
+fi
+
+
+
+if [ "$REMAINING" -gt 0 ]; then
+    zenity --info --width 500 --height 250 --text="Transaction successful!"
+    zenity --info --width 500 --height 250 --text="Collect your $((ENTRY-(MRP[$i]*selected_quantity))) rupees cash!!"
+else
+    zenity --info --width 500 --height 250 --text="Transaction successful!"
+fi
+
+ITEM=$(zenity --list --width 500 --height 400 --title="Vending Machine" --text="Items list " --column="Item No." --column="Item Details" --column="Price" --column="Quantity" "${item_list[@]}")
+
+# Thank you message
+zenity --info --width 500 --height 250 --text="THANK YOU VISIT AGAIN"
