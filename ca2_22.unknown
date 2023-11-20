@@ -1,0 +1,14 @@
+#!/bin/bash
+read -p "Enter the month (1-12): " month
+if [ "$month" -ge 3 ] && [ "$month" -le 5 ]; then
+    echo "Spring"
+elif [ "$month" -ge 6 ] && [ "$month" -le 8 ]; then
+    echo "Summer"
+elif [ "$month" -ge 9 ] && [ "$month" -le 11 ]; then
+    echo "Autumn"
+elif [ "$month" -eq 12 ] || [ "$month" -le 2 ]; then
+    echo "Winter"
+else
+    echo "Invalid month."
+fi
+

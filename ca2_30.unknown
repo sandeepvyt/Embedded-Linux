@@ -1,0 +1,9 @@
+#!/bin/bash
+echo ------Script for finding user exisits or not-----------
+read -p "Enter the user name:" user
+if id "$user" &>/dev/null; then
+    echo "$user exists."
+else
+    echo "$user does not exist."
+fi
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+echo Shell Script for finding prefix exisits or not
+string="Hello, World!"
+#prefix="Hello"
+echo "The main string is: $string"
+read -p "Enter the prefix string :" prefix
+if [[ $string == "$prefix"* ]]; then
+    echo "The string starts with the prefix."
+else
+    echo "The string does not start with the prefix."
+fi
+
+

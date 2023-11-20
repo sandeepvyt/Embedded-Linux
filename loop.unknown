@@ -1,0 +1,9 @@
+#!/bin/bash 
+counter=10
+
+while [ $counter -le 10 ] 
+do 
+echo the counter is $counter
+let counter=$counter+1
+done
+

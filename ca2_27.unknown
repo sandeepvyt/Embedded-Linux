@@ -1,0 +1,7 @@
+#!/bin/bash
+echo Script for finding the word count
+#string="This is a sample sentence."
+read -p "Enter the string whom you want to check: " string
+word_count=$(echo "$string" | wc -w)
+echo "The number of words in the string is: $word_count"
+

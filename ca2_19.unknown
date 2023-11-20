@@ -1,0 +1,7 @@
+#!/bin/bash
+echo Script for converting the string to upper-case
+#string="Hello, World!"
+read -p "Enter the String " string
+uppercase_string=$(echo "$string" | tr '[:lower:]' '[:upper:]')
+echo "Uppercase string: $uppercase_string"
+

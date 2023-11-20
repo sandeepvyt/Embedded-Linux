@@ -1,0 +1,23 @@
+#!/bin/bash 
+
+echo --------Calculator-------------
+echo first argument : $1
+echo second argument :$2
+echo addition of $1 and $2 is $(($1+$2))
+echo subtraction of $1 and $2 is $(($1-$2))
+echo multiplication of $1 and $2 is $(($1 * $2))
+echo Division of $1 and $2 is $(($1/$2))
+
+echo ------end of the calculator----------
+
+
+
+echo --------Calculator type-2-------------
+echo first argument : $1
+echo second argument :$2
+echo addition of $1 and $2 is `expr $1+$2`
+echo subtraction of $1 and $2 is `expr $1-$2`
+echo multiplication of $1 and $2 is `expr $1 /* $2`
+echo Division of $1 and $2 is`expr $1 / $2`
+
+

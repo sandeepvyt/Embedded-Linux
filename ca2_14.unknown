@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Get user input for the decimal number
+read -p "Enter a decimal number: " decimal_number
+
+binary=""
+while [ $decimal_number -gt 0 ]; do
+    remainder=$((decimal_number % 2))
+    binary="$remainder$binary"
+    decimal_number=$((decimal_number / 2))
+done
+
+echo "Binary: $binary"
+

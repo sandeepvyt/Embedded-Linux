@@ -1,0 +1,13 @@
+#!/bin/bash
+echo Script for finding substring of main exisits or not
+
+string="Hello, World!"
+#substring="World"
+echo "The comparing string is : $string"
+read -p "Enter the string you want to check is a substring or not: " substring
+if [[ $string == $substring ]]; then
+    echo "The string contains the substring."
+else
+    echo "The string does not contain the substring."
+fi
+

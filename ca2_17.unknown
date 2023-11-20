@@ -1,0 +1,10 @@
+#!/bin/bash
+read -p "Enter the File name:" file
+if [ -f "$file" ]; then
+    echo "$file is a regular file."
+elif [ -d "$file" ]; then
+    echo "$file is a directory."
+else
+    echo "$file is of unknown type."
+fi
+

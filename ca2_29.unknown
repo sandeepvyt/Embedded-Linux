@@ -1,0 +1,12 @@
+#!/bin/bash
+echo Script for finding greatest among 3 numbers
+
+read -p "Enter three numbers (separated by spaces): " num1 num2 num3
+if [ "$num1" -ge "$num2" ] && [ "$num1" -ge "$num3" ]; then
+    echo "The largest number is $num1."
+elif [ "$num2" -ge "$num1" ] && [ "$num2" -ge "$num3" ]; then
+    echo "The largest number is $num2."
+else
+    echo "The largest number is $num3."
+fi
+

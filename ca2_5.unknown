@@ -1,0 +1,17 @@
+#!bin/bash
+
+echo sum of even numbers and odd numbers in a range
+echo enter the limit of number
+read num
+esum=0
+osum=0
+for((i = 1; i <= $num; i++)); do
+    if [ $((i % 2)) == 0 ] 
+then 
+	esum=$((esum + i))
+else
+	osum=$((osum + i))
+fi
+done
+echo "The sum of the even numbers is: $esum"
+echo "The sum of the odd  numbers is: $osum"

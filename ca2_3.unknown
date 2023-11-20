@@ -1,0 +1,33 @@
+#!bin/bash
+
+echo "------Script to dispaly Month in a year-------"
+echo "Enter your month number:"
+read month
+case $month in 
+	1) 
+	       	echo "JANUARY";;
+       2)
+	       echo "FEBUARY";;
+       3)
+	       echo "MARCH";;
+	       
+       4) 
+	       	echo "APRIL";;
+       5)
+	       echo "MAY";;
+       6)
+	       echo "JUNE";;
+	7) 
+	       	echo "JULY";;
+       8)
+	       echo "AUGUEST";;
+       9)
+	       echo "SEPTEMBER";;
+	10) 
+	       	echo "OCTOBER";;
+       11)
+	       echo "NOVEMBER";;
+       12)
+	       echo "DECEMBER";;
+esac
+

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo -----Grades of Students--------------
+read -p "Enter the student's score: " score
+
+# Use a case statement to determine the grade
+case $score in
+    9[0-9]|100) # Matches 90-100
+        grade="A"
+        ;;
+    8[0-9])     # Matches 80-89
+        grade="B"
+        ;;
+    7[0-9])     # Matches 70-79
+        grade="C"
+        ;;
+    6[0-9])     # Matches 60-69
+        grade="D"
+        ;;
+    *)          # Default case
+        grade="F"
+        ;;
+esac
+
+echo "The student's grade is: $grade"
+

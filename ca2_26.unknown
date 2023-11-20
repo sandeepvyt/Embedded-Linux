@@ -1,0 +1,14 @@
+
+#!/bin/bash
+echo Script for finding suffix exisits or not
+
+string="Hello, World!"
+#suffix="World"
+echo "The main string is: $string "
+read -p "Enter the suffix string :" suffix
+if [[ $string == *"$suffix" ]]; then
+    echo "The string end with the suffix."
+else
+    echo "The string does not end with the suffix."
+fi
+

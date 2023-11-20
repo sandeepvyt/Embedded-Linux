@@ -1,0 +1,13 @@
+#!/bin/bash
+echo ------swapping of two numbers without using third variable--------
+echo Enter two  numbers num1 and num2:
+read num1
+read num2
+
+echo Before SWapping num1=$num1 and num2=$num2
+num1=$((num1+num2))
+num2=$((num1-num2))
+num1=$((num1-num2))
+echo After SWapping : num1=$num1 and num2=$num2
+
+  

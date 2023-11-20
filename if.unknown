@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ $value -eq 9 ];
+then echo "vlaue of 9 is true"
+fi
+
+
+
+
+

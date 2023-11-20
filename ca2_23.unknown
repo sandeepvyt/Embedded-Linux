@@ -1,0 +1,21 @@
+#!/bin/bash
+echo Script to find volumes
+read -p "Enter the shape (cube/sphere/cylinder): " shape
+if [ "$shape" = "cube" ]; then
+    read -p "Enter the side length: " side
+    volume=$((side * side * side))
+    echo "The volume of the cube is $volume."
+elif [ "$shape" = "sphere" ]; then
+    read -p "Enter the radius: " radius
+    volume=$(echo "4/3 * 3.1415 * $radius * $radius * $radius" | bc)
+    echo "The volume of the sphere is $volume."
+elif [ "$shape" = "cylinder" ]; then
+    read -p "Enter the radius: " radius
+    read -p "Enter the height: " height
+    volume=$(echo "3.1415 * $radius * $radius * $height" | bc)
+    echo "The volume of the cylinder is $volume."
+else
+    echo "Unsupported shape."
+fi
+
+

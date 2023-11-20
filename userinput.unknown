@@ -1,0 +1,14 @@
+#!/bin/bash
+read -p "enter your name :" first
+read -sp "enter your password:" pswd
+echo 
+echo "first name : $first"
+echo "password is  $pswd"
+
+echo $0 $1 $2 $3
+args=("$@")
+echo arg0: ${args[0]} arg1:${arg[1]} arg2:${arg[2]}
+echo all arguments :$@
+echo Argumrnts count :$#
+echo ----------
+
